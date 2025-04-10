@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Music Documents Search</title>
+</head>
+<body>
+  <h1>Search Music Documents</h1>
+  <form id="searchForm">
+    <input type="text" id="searchQuery" placeholder="Enter melody, e.g. dots pattern" required>
+    <button type="submit">Search</button>
+  </form>
+  <div id="results"></div>
+  
+  <script>
+    document.getElementById('searchForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const query = document.getElementById('searchQuery').value;
+      const response = await fetch('/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ query })
+      });
+      const results = await response.json();
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = `<pre>${JSON.stringify(results, null, 2)}</pre>`;
+    });
+  </script>
+</body>
+</html>

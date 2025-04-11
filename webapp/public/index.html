@@ -2,31 +2,32 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Music Documents Search</title>
+  <title>Music Search</title>
 </head>
 <body>
-  <h1>Search Music Documents</h1>
-  <form id="searchForm">
-    <input type="text" id="searchQuery" placeholder="Enter melody, e.g. dots pattern" required>
+  <h1>Music Search</h1>
+  <form id="search-form">
+    <input type="text" id="search-input" placeholder="Enter your search query" required />
+    <br>
+    <!-- Drop-down to choose search type -->
+    <label for="search-type">Search Type:</label>
+    <select id="search-type">
+      <option value="phrase">Phrase Match</option>
+      <option value="melody">Melody Match</option>
+    </select>
+    <br>
+    <!-- Checkbox for multi-key search -->
+    <label for="multi-key">
+      <input type="checkbox" id="multi-key" />
+      Search in multiple keys
+    </label>
+    <br>
     <button type="submit">Search</button>
   </form>
-  <div id="results"></div>
-  
-  <script>
-    document.getElementById('searchForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const query = document.getElementById('searchQuery').value;
-      const response = await fetch('/search', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ query })
-      });
-      const results = await response.json();
-      const resultsDiv = document.getElementById('results');
-      resultsDiv.innerHTML = `<pre>${JSON.stringify(results, null, 2)}</pre>`;
-    });
-  </script>
+
+  <div id="search-results"></div>
+
+  <!-- Link to the searcher.js file -->
+  <script src="searcher.js"></script>
 </body>
 </html>

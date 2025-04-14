@@ -1,23 +1,60 @@
-version: '3.7'
+
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.4
+    env_file:
+      - .env
+    container_name: elasticsearch
     environment:
-      # A minimal single-node configuration for testing
-      discovery.type: single-node
-      bootstrap.memory_lock: "true"
-      ES_JAVA_OPTS: "-Xms256m -Xmx256m"
+      - discovery.type=single-node
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=false
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
     ports:
       - "9200:9200"
+    networks:
+      - musicxmlnet
     volumes:
       - esdata:/usr/share/elasticsearch/data
 
-  webapp:
-    build: ./webapp
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.17.4
+    container_name: kibana
+    env_file:
+      - .env
+    environment:
+      - ELASTICSEARCH_HOSTS=${ELASTIC_NODE}
+      - ELASTICSEARCH_USERNAME=${APP_ES_USERNAME}
+      - ELASTICSEARCH_PASSWORD=${APP_ES_PASSWORD}
+      - SERVER_PUBLICBASEURL=${KIBANA_NODE}
     ports:
-      - "3000:3000"
+      - "5601:5601"
     depends_on:
       - elasticsearch
+    networks:
+      - musicxmlnet
+
+  webapp:
+    build: ./webapp
+    env_file:
+      - .env
+    container_name: webapp
+    ports:
+      - "3000:3000"
+    environment:
+      - ELASTICSEARCH_HOSTS=${ELASTIC_NODE}
+      - ELASTICSEARCH_USERNAME=${APP_ES_USERNAME}
+      - ELASTICSEARCH_PASSWORD=${APP_ES_PASSWORD}
+    depends_on:
+    - elasticsearch
+    networks:
+      - musicxmlnet
+
+networks:
+  musicxmlnet:
+    external: true
+
 
 volumes:
   esdata:
+

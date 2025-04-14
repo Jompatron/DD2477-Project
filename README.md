@@ -1,5 +1,73 @@
 # DD2477-Project
 
+
+1. Clone the repository
+   
+git clone https://github.com/your-org/DD2447-Project.git  
+cd DD2447-Project
+
+---
+
+2. Set up environment variables
+
+Add the .env file that was shared via WhatsApp to DD2477 root  
+
+---
+
+3. Create the Docker network (only needed the first time)
+
+docker network create musicxmlnet
+
+---
+
+4. Start the app stack
+
+docker compose up --build
+
+This will:
+- Start Elasticsearch and Kibana
+- Build and start the Node.js web app
+- Load your environment variables automatically from `.env`
+
+---
+
+5. One-time setup (roles, user, sample data)
+
+Once the containers are running, run the setup script:
+
+chmod +x setup.sh  
+./setup.sh
+
+This will:
+- Create the `music_reader` role
+- Create the `kibanabot` user
+- Index the provided `bulk_music.json` sample data
+
+---
+
+6. Access the apps
+
+- Web app: http://localhost:3000  
+- Kibana: http://localhost:5601  
+  Log in using either:
+  - elastic / your password
+  - kibanabot / app password
+
+---
+
+## Cleanup
+
+To stop all services:
+
+docker compose down
+
+To also clear all volumes and passwords:
+
+docker compose down -v  
+docker network rm musicxmlnet
+
+---
+
 ## 🗓️ April 3rd Meeting Notes
 
 Sources of musicxml docs for corpus:

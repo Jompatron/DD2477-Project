@@ -15,7 +15,7 @@ Potential ideas:
 
 Random tweaks to improve musical matching (not so important, but helpful):
 - A natural sign in front of note should be same as notes with no natural sign of otherwise same characteristics
-- Remove grace notes, trills, mordents, slides to increase match rate
+- Remove grace notes, trill, mordents, slides to increase match rate
 
 ## 🗓️ April 8th Meeting Notes
 

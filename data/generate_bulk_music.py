@@ -20,23 +20,21 @@ def quantize_duration(ql):
 def extract_musicxml_features(file_path):
     try:
         score = converter.parse(file_path)
-        score = score.expandRepeats()  # Optional: expands repeat structures
-
+        try:
+            score = score.expandRepeats()  # Try expanding repeats
+        except Exception as e:
+            print(f"Warning: could not expand repeats in {file_path}: {e}. Continuing with original score.")
+        # ... continue processing
         data = {}
-
-        # Metadata
         data['title'] = score.metadata.title if score.metadata and score.metadata.title else os.path.basename(file_path)
         data['composer'] = score.metadata.composer if score.metadata and score.metadata.composer else "Unknown"
 
-        # Key signature
         key = score.analyze('key')
         data['key'] = key.name
 
-        # Time signature
         ts = score.recurse().getElementsByClass('TimeSignature').first()
         data['time_signature'] = ts.ratioString if ts else "Unknown"
 
-        # Tokens
         tokens = []
         for element in score.recurse().notesAndRests:
             if isinstance(element, note.Note):
@@ -50,16 +48,15 @@ def extract_musicxml_features(file_path):
                 dur_label = quantize_duration(element.quarterLength)
                 for p in element.pitches:
                     tokens.append(f"{p.nameWithOctave}_{dur_label}")
-
-        data['tokens'] = tokens
+        data['tokens'] = " ".join(tokens)
         return data
     except Exception as e:
         print(f"❌ Failed to process {file_path}: {e}")
         return None
 
 # === Main Script ===
-music_dir = "xmlsamples"
-bulk_file = "bulk_music.json"
+music_dir = "data/xmlsamples"
+bulk_file = "data/bulk_music.json"
 all_lines = []
 
 for root, _, files in os.walk(music_dir):

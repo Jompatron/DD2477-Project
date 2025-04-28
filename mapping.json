@@ -1,0 +1,13 @@
+{
+    "mappings": {
+      "properties": {
+        "title":          { "type": "text"    },
+        "composer":       { "type": "keyword" },
+        "key":            { "type": "keyword" },
+        "time_signature": { "type": "keyword" },
+        "tokens_str":     { "type": "text"    },
+        "interval_fp":    { "type": "keyword" }
+      }
+    }
+  }
+  

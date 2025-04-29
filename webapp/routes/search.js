@@ -68,6 +68,7 @@ const esClient = require('../config/es_config');
 // module.exports = router;
 
 const { fingerprintMelody } = require('../utils/melodyUtils');
+const { fingerprintRhythm } = require('../utils/rhythmUtils');
 
 /**
  * POST /search
@@ -135,13 +136,13 @@ router.post('/', async (req, res) => {
 
     if (searchType === 'rhythm') {
       const tokens = query.trim().split(/\s+/); // Split the query into tokens
-      const rhythmQuery = tokens.join(' '); // Join tokens to form the rhythm query
-      console.log(`Generated rhythm query: ${rhythmQuery}`); // Debugging log
+      const fp = fingerprintRhythm(tokens); // Generate the fingerprint
+      console.log(`Generated rhythm query (fp): ${fp}`); // Debugging log
     
       // Perform an exact match search for the rhythm
       let esResponse = await esClient.search({
         index: 'rhythm_test', // Use the new index for rhythm-based searches
-        body: { size: 10, query: { match_phrase: { rhythm_fp: { query: rhythmQuery } } } }
+        body: { size: 10, query: { match_phrase: { rhythm_fp: { query: fp } } } }
       });
     
       let hits = esResponse.body.hits.hits;
@@ -151,7 +152,7 @@ router.post('/', async (req, res) => {
       if (hits.length === 0) {
         esResponse = await esClient.search({
           index: 'rhythm_test',
-          body: { size: 10, query: { wildcard: { rhythm_fp: { value: `*${rhythmQuery}*` } } } }
+          body: { size: 10, query: { wildcard: { rhythm_fp: { value: `*${fp}*` } } } }
         });
         hits = esResponse.body.hits.hits;
         mode = 'wildcard';
@@ -164,7 +165,7 @@ router.post('/', async (req, res) => {
         score: h._score
       }));
     
-      return res.json({ mode, query_rhythm: rhythmQuery, results });
+      return res.json({ mode, query_rhythm: fp, results });
     }
 
     return res.status(400).json({ error: 'Invalid searchType' });

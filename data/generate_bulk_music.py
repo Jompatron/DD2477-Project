@@ -92,6 +92,22 @@ def fingerprint_melody(tokens):
 
 #Could be combined with the above function if we want to make the code cleaner
 def fingerprint_rhythm(tokens):
+    duration_mapping = {
+        'tripletEighth': 1.0 / 3,
+        'tripletQuarter': 2.0 / 3,
+        'sixteenth': 0.25,
+        'eighth': 0.5,
+        'dottedEighth': 0.75,
+        'quarter': 1.0,
+        'dottedQuarter': 1.5,
+        'half': 2.0,
+        'dottedHalf': 3.0,
+        'whole': 4.0,
+        'dottedWhole': 6.0,
+        'doubleWhole': 8.0,
+        'dottedDoubleWhole': 12.0
+    }
+
     """
     Given tokens like ['B-4_quarter', 'C5_eighth', ...],
     compute a rhythm fingerprint.
@@ -100,11 +116,21 @@ def fingerprint_rhythm(tokens):
     for tok in tokens:
         try:
             _, dur = tok.split('_', 1)
+            if dur in duration_mapping:
+                durs.append(dur)
         except ValueError:
             continue
-        durs.append(dur)
 
-    return " ".join(durs)
+    fp = []
+    prev = None
+    for dur in durs:
+        if prev is not None:
+            ratio = duration_mapping[dur] / prev
+            ratio_str = f"{ratio:.2f}"  # Format as signed float
+            fp.append(ratio_str)
+        prev = duration_mapping[dur]
+
+    return " ".join(fp)
 
 
 def clean_text(text):

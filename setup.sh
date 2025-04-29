@@ -7,7 +7,7 @@ curl -k -u elastic:$ELASTIC_PASSWORD \
   -d '{
     "indices": [
       {
-        "names": [ "musicxml" ],
+        "names": [ "musicxml_intervals" ],
         "privileges": [ "read", "view_index_metadata" ]
       }
     ]
@@ -24,9 +24,15 @@ curl -k -u elastic:$ELASTIC_PASSWORD \
   }"
 
 echo "📦 Indexing musicxml data..."
-curl -k -u elastic:$ELASTIC_PASSWORD \
-  -X POST http://localhost:9200/musicxml/_bulk \
-  -H "Content-Type: application/json" \
-  --data-binary @data/bulk_music.json
+
+curl -k -u elastic:$ELASTIC_PASSWORD  -X PUT "http://localhost:9200/musicxml_intervals" \
+    -H "Content-Type: application/json" \
+    --data-binary "@mapping.json"
+
+
+curl -k -u elastic:$ELASTIC_PASSWORD  -X POST "http://localhost:9200/musicxml_intervals/_bulk?pretty&refresh" \
+  -H "Content-Type: application/x-ndjson" \
+  --data-binary "@data/corpus_interval_bulk_music.json"
+
 
 echo "✅ Setup complete!"

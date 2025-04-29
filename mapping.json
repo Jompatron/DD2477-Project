@@ -6,7 +6,8 @@
         "key":            { "type": "keyword" },
         "time_signature": { "type": "keyword" },
         "tokens_str":     { "type": "text"    },
-        "interval_fp":    { "type": "keyword" }
+        "interval_fp":    { "type": "keyword" },
+        "rythm_fp":     { "type": "keyword" }
       }
     }
   }

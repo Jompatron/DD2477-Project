@@ -90,6 +90,23 @@ def fingerprint_melody(tokens):
     return " ".join(fp)
 
 
+#Could be combined with the above function if we want to make the code cleaner
+def fingerprint_rhythm(tokens):
+    """
+    Given tokens like ['B-4_quarter', 'C5_eighth', ...],
+    compute a rhythm fingerprint.
+    """
+    durs = []
+    for tok in tokens:
+        try:
+            _, dur = tok.split('_', 1)
+        except ValueError:
+            continue
+        durs.append(dur)
+
+    return " ".join(durs)
+
+
 def clean_text(text):
     return re.sub(r'[^a-zA-Z0-9\s]', '', text).strip().lower()
 
@@ -162,22 +179,23 @@ def extract_musicxml_features(file_path):
         data['tokens'] = tokens
         data['tokens'] = " ".join(tokens)
         data['interval_fp'] = fingerprint_melody(tokens)
+        data['rhythm_fp'] = fingerprint_rhythm(tokens)
         return data
     except Exception as e:
         print(f"\u274c Failed to process {file_path}: {e}")
         return None
 
 # === Main Script ===
-music_dir = "../corpus"
+music_dir = "../xmlsamples"
 test_music_dir = "../melodyTests"
-bulk_file = "corpus_interval_bulk_music.json"
+bulk_file = "bulk_music_test.json"
 all_lines = []
 
 #big corpus
 for root, _, files in os.walk(music_dir):
     for filename in files:
         #changed this to .xml instead of .musicxml with corpus batch loading instead of samples
-        if filename.lower().endswith(".xml"):
+        if filename.lower().endswith(".musicxml"):
             full_path = os.path.join(root, filename)
             print(f"Processing {full_path}...")
             doc = extract_musicxml_features(full_path)
@@ -186,7 +204,7 @@ for root, _, files in os.walk(music_dir):
                 title = doc['title']
                 title_id_map[title] = doc_id
 
-                all_lines.append(json.dumps({ "index": { "_index": "musicxml_intervals", "_id": doc_id } }))
+                all_lines.append(json.dumps({ "index": { "_index": "rhythm_test", "_id": doc_id } }))
                 all_lines.append(json.dumps(doc))
 
                 doc_id += 1
@@ -206,7 +224,7 @@ for root, _, files in os.walk(test_music_dir):
                 title = doc['title']
                 title_id_map[title] = doc_id
 
-                all_lines.append(json.dumps({ "index": { "_index": "musicxml_intervals", "_id": doc_id } }))
+                all_lines.append(json.dumps({ "index": { "_index": "rhythm_test", "_id": doc_id } }))
                 all_lines.append(json.dumps(doc))
 
                 doc_id += 1

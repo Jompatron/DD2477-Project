@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ -f .env ]; then
+  export $(grep -v '^#' .env | xargs)
+fi
+
 echo "🔐 Creating music_reader role..."
 curl -k -u elastic:$ELASTIC_PASSWORD \
   -X PUT http://localhost:9200/_security/role/music_reader \

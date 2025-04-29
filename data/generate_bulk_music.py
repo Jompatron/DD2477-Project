@@ -18,22 +18,22 @@ EQ_RE = re.compile(r'^([A-G])([#b\-]{0,2})(-?\d+)$')
 def quantize_duration(ql):
     # Convert quarterLength into readable labels
     duration_mapping = {
-        1.0/3: "tripletEighth",
-        2.0/3: "tripletQuarter",
-        0.25: "sixteenth",
-        0.5: "eighth",
-        0.75: "dottedEighth",
-        1.0: "quarter",
-        1.5: "dottedQuarter",
-        2.0: "half",
-        3.0: "dottedHalf",
-        4.0: "whole",
-        6.0: "dottedWhole",
-        8.0: "doubleWhole", 
         12.0: "dottedDoubleWhole",
+        8.0: "doubleWhole", 
+        6.0: "dottedWhole",
+        4.0: "whole",
+        3.0: "dottedHalf",
+        2.0: "half",
+        1.5: "dottedQuarter",
+        1.0: "quarter",
+        0.75: "dottedEighth",
+        0.5: "eighth",
+        0.25: "sixteenth",
+        2.0/3: "tripletQuarter",
+        1.0/3: "tripletEighth", 
     }
 
-    tolerance = 0.1
+    tolerance = 0.05
 
     for base_duration, label in duration_mapping.items():
         if abs(ql - base_duration) < tolerance:
@@ -163,7 +163,6 @@ def extract_musicxml_features(file_path):
                     continue  # Skip grace notes
                 #double sharps or flats and fix the - substituion with flat
                 pitch = element.pitch.simplifyEnharmonic().nameWithOctave.replace('-', 'b')
-                print("quarter length: ", element.quarterLength)
                 dur_label = quantize_duration(element.quarterLength)
                 tokens.append(f"{pitch}_{dur_label}")
             elif isinstance(element, note.Rest):
@@ -240,7 +239,7 @@ with open(bulk_file, "w") as f:
 
 print(f"\n Bulk JSON written to {bulk_file} with {len(all_lines)//2} documents.")
 
-# Save title-id mapping
+# # Save title-id mapping
 #change r+ to w when writing from scratch
 with open("corpus_title_id_map.json", "w") as f:
     json.dump(title_id_map, f, indent=2)

@@ -122,10 +122,13 @@ def extract_musicxml_features(file_path):
         data['composer'] = clean_text(composer)
 
         # Key signature
-        key = score.analyze('key')
+        key_sig = score.recurse().getElementsByClass('KeySignature').first()
+        if key_sig:
+            key = key_sig.asKey()
         #music21 uses - for flat 
-        key_name = key.name.replace('-', 'b')
-        data['key'] = key_name
+        else:
+            key = score.analyze('key')
+        data['key'] = key.name.replace('-', 'b')
 
         # Time signature
         ts = score.recurse().getElementsByClass('TimeSignature').first()
@@ -143,6 +146,7 @@ def extract_musicxml_features(file_path):
                     continue  # Skip grace notes
                 #double sharps or flats and fix the - substituion with flat
                 pitch = element.pitch.simplifyEnharmonic().nameWithOctave.replace('-', 'b')
+                print("quarter length: ", element.quarterLength)
                 dur_label = quantize_duration(element.quarterLength)
                 tokens.append(f"{pitch}_{dur_label}")
             elif isinstance(element, note.Rest):

@@ -75,97 +75,119 @@ const { fingerprintRhythm } = require('../utils/rhythmUtils');
  * body: { query, searchType: 'phrase'|'melody'|'rhythm', multiKey }
  */
 router.post('/', async (req, res) => {
-  const { query, searchType, multiKey } = req.body;
+  const { query, searchType, multiKey, slop} = req.body;
   if (!query) return res.status(400).json({ error: 'Provide body.query' });
 
   try {
     if (searchType === 'phrase') {
+      // Build the Elasticsearch query for phrase search
       const esQuery = {
         bool: {
           must: [
-            { match_phrase: { tokens: query } }
+            {
+              match_phrase: {
+                tokens: {
+                  query: query,
+                  slop: slop
+                }
+              }
+            }
           ],
           should: [
             {
               multi_match: {
-                query: query,
-                fields: ["title", "composer", "key", "time_signature"]
+                query: query, // Boost results by matching across other fields
+                fields: ["title", "composer", "key", "time_signature"],
+                type: "best_fields" // Use the best matching field for scoring
               }
             }
           ]
         }
       };
 
+      
+        // Execute the Elasticsearch query
       const esResponse = await esClient.search({
-        index: 'musicxml_intervals',
+        index: 'rhythm_test', // Use the appropriate index
         body: { size: 10, query: esQuery }
       });
+
+        // Map the results to a simplified format
       const hits = esResponse.body.hits.hits.map(h => ({
         title: h._source.title,
         composer: h._source.composer,
         score: h._score
       }));
+
+      // Return the results
       return res.json({ mode: 'phrase', results: hits });
+      
     }
 
     if (searchType === 'melody') {
+      // Split the query into tokens and generate the fingerprint
       const tokens = query.trim().split(/\s+/);
       const fp = fingerprintMelody(tokens);
       console.log(`Generated fingerprint (fp): ${fp}`); // Debugging log
-      let esResponse = await esClient.search({
-        index: 'musicxml_intervals',
-        body: { size: 10, query: { match_phrase: { interval_fp: { query: fp } } } }
+    
+      // Build the Elasticsearch query for exact match
+      const esQuery = {
+        match_phrase: {
+          interval_fp: {
+            query: fp,
+            slop: slop
+          }
+        }
+      };
+    
+      // Execute the Elasticsearch query
+      const esResponse = await esClient.search({
+        index: 'rhythm_test',
+        body: { size: 10, query: esQuery }
       });
-      let hits = esResponse.body.hits.hits;
-      let mode = 'exact';
-      if (hits.length === 0) {
-        esResponse = await esClient.search({
-          index: 'musicxml_intervals',
-          body: { size: 10, query: { wildcard: { interval_fp: { value: `*${fp}*` } } } }
-        });
-        hits = esResponse.body.hits.hits;
-        mode = 'wildcard';
-      }
-      const results = hits.map(h => ({
+    
+      // Map the results to a simplified format
+      const hits = esResponse.body.hits.hits.map(h => ({
         title: h._source.title,
         composer: h._source.composer,
         score: h._score
       }));
-      return res.json({ mode, query_fp: fp, results });
+    
+      // Return the results
+      return res.json({ mode: 'melody', query_fp: fp, results: hits });
     }
 
     if (searchType === 'rhythm') {
-      const tokens = query.trim().split(/\s+/); // Split the query into tokens
-      const fp = fingerprintRhythm(tokens); // Generate the fingerprint
-      console.log(`Generated rhythm query (fp): ${fp}`); // Debugging log
+      // Split the query into tokens and generate the fingerprint
+      const tokens = query.trim().split(/\s+/);
+      const fp = fingerprintRhythm(tokens);
+      console.log(`Generated fingerprint (fp): ${fp}`); // Debugging log
     
-      // Perform an exact match search for the rhythm
-      let esResponse = await esClient.search({
-        index: 'rhythm_test', // Use the new index for rhythm-based searches
-        body: { size: 10, query: { match_phrase: { rhythm_fp: { query: fp } } } }
+      // Build the Elasticsearch query for exact match
+      const esQuery = {
+        match_phrase: {
+          rhythm_fp: {
+            query: fp,
+            slop: slop
+          }
+        }
+      };
+    
+      // Execute the Elasticsearch query
+      const esResponse = await esClient.search({
+        index: 'rhythm_test',
+        body: { size: 10, query: esQuery }
       });
     
-      let hits = esResponse.body.hits.hits;
-      let mode = 'exact';
-    
-      // If no exact matches are found, perform a wildcard search
-      if (hits.length === 0) {
-        esResponse = await esClient.search({
-          index: 'rhythm_test',
-          body: { size: 10, query: { wildcard: { rhythm_fp: { value: `*${fp}*` } } } }
-        });
-        hits = esResponse.body.hits.hits;
-        mode = 'wildcard';
-      }
-    
       // Map the results to a simplified format
-      const results = hits.map(h => ({
+      const hits = esResponse.body.hits.hits.map(h => ({
         title: h._source.title,
         composer: h._source.composer,
         score: h._score
       }));
     
-      return res.json({ mode, query_rhythm: fp, results });
+      // Return the results
+      return res.json({ mode: 'rhythm', query_fp: fp, results: hits });
     }
 
     return res.status(400).json({ error: 'Invalid searchType' });

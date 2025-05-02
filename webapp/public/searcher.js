@@ -5,19 +5,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const multiKeyCheckbox = document.getElementById('multi-key');
   const resultsContainer = document.getElementById('results');
   const clearBtn = document.getElementById('clearBtn');
+  const slopInput = document.getElementById('slop-input');
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const query = input.value.trim();
     const searchType = typeSelect.value;
     const multiKey = multiKeyCheckbox.checked;
+    const slop = parseInt(slopInput.value) || 0;
 
     resultsContainer.innerHTML = '<div class="text-muted">Searching...</div>';
     try {
       const res = await fetch('/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query, searchType, multiKey })
+        body: JSON.stringify({ query, searchType, multiKey, slop })
       });
       const data = await res.json();
       if (data.error) {

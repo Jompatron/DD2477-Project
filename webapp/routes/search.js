@@ -75,7 +75,7 @@ const { fingerprintRhythm } = require('../utils/rhythmUtils');
  * body: { query, searchType: 'phrase'|'melody'|'rhythm', multiKey }
  */
 router.post('/', async (req, res) => {
-  const { query, searchType, multiKey } = req.body;
+  const { query, searchType, multiKey, slop } = req.body;
   if (!query) return res.status(400).json({ error: 'Provide body.query' });
 
   try {
@@ -83,7 +83,13 @@ router.post('/', async (req, res) => {
       const esQuery = {
         bool: {
           must: [
-            { match_phrase: { tokens: query } }
+            { match_phrase: {
+                tokens: {
+                  query: query,
+                  slop: slop
+                }
+              }
+            }
           ],
           should: [
             {

@@ -6,6 +6,7 @@ from music21 import converter, note, chord
 
 doc_id = 1
 title_id_map = {}
+id_2_path = {}
 
 # Base semitone indices for natural notes
 NOTE_BASE = {
@@ -173,7 +174,7 @@ def extract_musicxml_features(file_path):
 # === Main Script ===
 music_dir = "../corpus"
 test_music_dir = "../melodyTests"
-bulk_file = "corpus_interval_bulk_music.json"
+bulk_file = "bulk_index.json"
 all_lines = []
 
 #big corpus
@@ -188,6 +189,7 @@ for root, _, files in os.walk(music_dir):
                 # Add Elasticsearch bulk action + doc
                 title = doc['title']
                 title_id_map[title] = doc_id
+                id_2_path[doc_id] = full_path
 
                 all_lines.append(json.dumps({ "index": { "_index": "musicxml_intervals", "_id": doc_id } }))
                 all_lines.append(json.dumps(doc))
@@ -208,6 +210,7 @@ for root, _, files in os.walk(test_music_dir):
                 # Add Elasticsearch bulk action + doc
                 title = doc['title']
                 title_id_map[title] = doc_id
+                id_2_path[doc_id] = full_path
 
                 all_lines.append(json.dumps({ "index": { "_index": "musicxml_intervals", "_id": doc_id } }))
                 all_lines.append(json.dumps(doc))
@@ -223,7 +226,13 @@ print(f"\n Bulk JSON written to {bulk_file} with {len(all_lines)//2} documents."
 
 # # Save title-id mapping
 #change r+ to w when writing from scratch
-with open("corpus_title_id_map.json", "w") as f:
+with open("title_2_id.json", "w") as f:
     json.dump(title_id_map, f, indent=2)
 
-print(f"✅ Title-ID mapping saved to corpus_title_id_map.json.")
+# # Save id-path mapping
+#change r+ to w when writing from scratch
+with open("id_2_path.json", "w") as f:
+    json.dump(id_2_path, f, indent=2)
+
+print(f"✅ Title-ID mapping saved to title_2_id.json.json.")
+print(f"✅ ID-Path mapping saved to id_2_path.json.")

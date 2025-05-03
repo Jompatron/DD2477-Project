@@ -50,7 +50,9 @@ services:
     networks:
       - musicxmlnet
     volumes:
-      - ./webapp:/app/webapp # Mount local directory to container
+    - ./webapp:/app/webapp
+    - ./data:/app/data
+    - ./corpus:/app/corpus
 
 networks:
   musicxmlnet:

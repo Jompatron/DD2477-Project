@@ -22,7 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/search', searchRouter);
 
 // Serve static XML files from the 'scores' directory
-app.use('/scores', express.static(path.join(__dirname, 'melodyTests')));
+app.use('/scores', express.static('/app/corpus'));
 
 app.get('/score/:id', async (req, res) => {
   const id = req.params.id;

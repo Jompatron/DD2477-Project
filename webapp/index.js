@@ -14,11 +14,21 @@ app.get('/health', async (req, res) => {
   catch (e) { res.status(500).json({ status: 'error', error: e.message }); }
 });
 
+
 // Serve static files (like index.html)
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Route for search functionality
 app.use('/search', searchRouter);
+
+// Serve static XML files from the 'scores' directory
+app.use('/scores', express.static(path.join(__dirname, 'melodyTests')));
+
+app.get('/score/:id', async (req, res) => {
+  const id = req.params.id;
+  const result = await getScoreById(id); // Implement this function
+  res.type('text/xml').send(result.musicxml);
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

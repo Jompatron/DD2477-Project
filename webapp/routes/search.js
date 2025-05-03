@@ -102,7 +102,8 @@ router.post('/', async (req, res) => {
       const hits = esResponse.body.hits.hits.map(h => ({
         title: h._source.title,
         composer: h._source.composer,
-        score: h._score
+        score: h._score,
+        filename: 'hbd_Cmajor.musicxml'
       }));
       return res.json({ mode: 'phrase', results: hits });
     }
@@ -128,7 +129,9 @@ router.post('/', async (req, res) => {
       const results = hits.map(h => ({
         title: h._source.title,
         composer: h._source.composer,
-        score: h._score
+        score: h._score,
+        filename: 'hbd_Cmajor.musicxml'
+
       }));
       return res.json({ mode, query_fp: fp, results });
     }

@@ -49,6 +49,8 @@ services:
     - elasticsearch
     networks:
       - musicxmlnet
+    volumes:
+      - ./webapp:/app/webapp # Mount local directory to container
 
 networks:
   musicxmlnet:

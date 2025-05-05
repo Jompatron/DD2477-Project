@@ -3,10 +3,7 @@ import json
 import re
 from pathlib import Path
 from music21 import converter, note, chord
-
-doc_id = 1
-title_id_map = {}
-id_2_path = {}
+from tqdm import tqdm
 
 # Base semitone indices for natural notes
 NOTE_BASE = {
@@ -117,7 +114,7 @@ def extract_musicxml_features(file_path):
 
         cleaned_title = clean_title(title)
         if cleaned_title.lower().startswith("qm"):
-            print(f"Skipping {file_path} as the cleaned title starts with 'Qm'.")
+            #print(f"Skipping {file_path} as the cleaned title starts with 'Qm'.")
             return None  # Skip processing this file for the sake of a pretty demo
         data['title'] = cleaned_title
         data['composer'] = clean_text(composer)
@@ -176,14 +173,42 @@ music_dir = "../corpus"
 test_music_dir = "../melodyTests"
 bulk_file = "bulk_index.json"
 all_lines = []
+total_files = sum(len(files) for _, _, files in os.walk(music_dir))
+# File to track processed files
+processed_files_path = "processed_files.json"
+
+BATCH_SIZE = 500
+batch_counter = 0
+processed_files = 0
+title_id_map = {}
+id_2_path = {}
+
+# Load previously processed files
+if os.path.exists(processed_files_path):
+    with open(processed_files_path, "r") as f:
+        processed_data = json.load(f)
+        processed_doc_id = processed_data.get("doc_id", 1)
+        processed_file_paths = set(processed_data.get("file_paths", []))
+        doc_id = processed_doc_id  # Resume doc_id from the last saved value
+else:
+    processed_file_paths = set()
+    doc_id = 1
+
+# Dynamically generate the bulk file name based on the starting doc_id
+bulk_file = f"bulk_index_resume_{doc_id}.json"
+all_lines = []
+total_files = sum(len(files) for _, _, files in os.walk(music_dir))
 
 #big corpus
 for root, _, files in os.walk(music_dir):
-    for filename in files:
+    for filename in tqdm(files, desc="Processing files", total=total_files):
         #changed this to .xml instead of .musicxml with corpus batch loading instead of samples
         if filename.lower().endswith(".xml"):
             full_path = os.path.join(root, filename)
-            print(f"Processing {full_path}...")
+            # Skip already processed files
+            if full_path in processed_file_paths:
+                continue
+
             doc = extract_musicxml_features(full_path)
             if doc:
                 # Add Elasticsearch bulk action + doc
@@ -195,27 +220,43 @@ for root, _, files in os.walk(music_dir):
                 all_lines.append(json.dumps(doc))
 
                 doc_id += 1
-                if doc_id == 500:
-                    break
+                batch_counter += 1
+                processed_files += 1
+                processed_file_paths.add(full_path)  # Mark file as processed
+
+            if batch_counter >= BATCH_SIZE:
+                print(f"Saving batch of {BATCH_SIZE} files...")
+                with open(bulk_file, "a") as f:
+                    f.write("\n".join(all_lines) + "\n")
+                all_lines = []  # Clear the batch
+                batch_counter = 0
+            if doc_id == 5000:
+                break
 
 #self-written musicxml tests
-for root, _, files in os.walk(test_music_dir):
-    for filename in files:
-        #changed this to .xml instead of .musicxml with corpus batch loading instead of samples
-        if filename.lower().endswith(".musicxml"):
-            full_path = os.path.join(root, filename)
-            print(f"Processing {full_path}...")
-            doc = extract_musicxml_features(full_path)
-            if doc:
-                # Add Elasticsearch bulk action + doc
-                title = doc['title']
-                title_id_map[title] = doc_id
-                id_2_path[doc_id] = full_path
+# for root, _, files in os.walk(test_music_dir):
+#     for filename in files:
+#         #changed this to .xml instead of .musicxml with corpus batch loading instead of samples
+#         if filename.lower().endswith(".musicxml"):
+#             full_path = os.path.join(root, filename)
+#             print(f"Processing {full_path}...")
+#             doc = extract_musicxml_features(full_path)
+#             if doc:
+#                 # Add Elasticsearch bulk action + doc
+#                 title = doc['title']
+#                 title_id_map[title] = doc_id
+#                 id_2_path[doc_id] = full_path
 
-                all_lines.append(json.dumps({ "index": { "_index": "musicxml_intervals", "_id": doc_id } }))
-                all_lines.append(json.dumps(doc))
+#                 all_lines.append(json.dumps({ "index": { "_index": "musicxml_intervals", "_id": doc_id } }))
+#                 all_lines.append(json.dumps(doc))
 
-                doc_id += 1
+#                 doc_id += 1
+
+# Save any remaining files in the last batch
+if all_lines:
+    print(f"Saving final batch of {len(all_lines)//2} files...")
+    with open(bulk_file, "a") as f:
+        f.write("\n".join(all_lines) + "\n")
 
 
 # Write to file

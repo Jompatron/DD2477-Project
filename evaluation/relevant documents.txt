@@ -1,0 +1,64 @@
+#All relevant titles for G4_eighth G4_eighth G4_eighth Eb4_half , +0_eighth +0_eighth -4_half:
+
+"title": "Symphony No 5 In C Minor 1St Mvmt", "composer": "beethoven"
+"title": "Symphony No", "composer": "l van beethoven"
+"title": "Morning Prayer", "composer": "p i tchaikovsky"
+"title": Марш "Вступление Красной Армии В Будапешт" ('불운 군대의 부다페스트 입성' 행진곡)
+"title": "Mr", "composer": "elo"
+"title": "Novocaine", "composer": "unknown"
+"title": "Music Of Middle Earth", "composer": "bailey furrow"
+"title": "Symphonie No. 5I.1. Trauermarsch.", "composer": "gustav mahler"
+
+
+1. Symphony No 5 In C Minor 1St Mvmt
+2. Symphony No by l van beethoven
+3. Symphony No by Beethoven
+4. Roll Over Beethoven
+5. Requiem by ludwig van beethovenwa mozartpaul oneill"
+6. Because Sax
+
+#All relevant documents for ode to joy E4_quarter  E4_quarter  F4_quarter  G4_quarter / +0_quarter +1_quarter +2_quarter from the Ode to Joy
+
+"title": "Rex Tremendae", "composer": "hector berlioz"
+"title": "Symphony No 5 In C Minor 1St Mvmt", "composer": "beethoven"
+"title": "Sinatina", "composer": "anto dvorak"
+"title": "Ode To Joy Cacofony", "composer": "tommy thomson"
+"title": "Star Spangled Banner For Violin And Viola", "composer": "unknown"
+"title": "Strong In The Real Way", "composer": "rebecca sugar"
+"title": "Sonic 2", "composer": "masato nakamura"
+"title": "Title Songs Collection (2013-2019)", "composer": "arranged by myee89"
+"title": "Água De Beber", "composer": "tom jobim"
+"title": "Oh Solitude", "composer": "henry purcell"
+"title": "Title", "composer": "composer"
+"title": "Sway 2017", "composer": "norman gimbelpablo beltran ruiz"
+"title": "Merry Go Round Of Life", "composer": "joe hisaishi"
+"title": "Howl'S Moving Castle", "composer": "composed by joe hisaishi"
+"title": "Sos", "composer": "arr andrew king"
+
+
+#All relevant for Dies D4_quarter E4_quarter F4_quarter E4_quarter
+
+"title": "Symphony No 5 In C Minor 1St Mvmt", "composer": "beethoven"
+"title": "Το Βαλς Των Χαμένων Ονείρων", "composer": ""
+"title": "Mozart Dies Irae", "composer": "wolfgang amadeus mozart"
+"title": "Dies Irae", "composer": "unknown"
+"title": "Rex Tremendae", "composer": "hector berlioz"
+"title": "Symphony No 5 In C Minor 1St Mvmt", "composer": "beethoven"
+"title": "Hymns, Ancient And Modern, For Use In The Services Of The Church, With Accompanying Tunes, Compiled And Arranged Under The Musical Editorship Of William Henry Monk, Organist And Director Of The Choir At King\u2019S College, London.", "composer": "william henry monk 18231889 1861"
+"title": "O Come, All Ye Faithful", "composer": "traditional"
+"title": "White Christmas", "composer": "rearranged by cecilia kim"
+"title": "Mr", "composer": "elo"
+"title": "Rock Around The Clock", "composer": "bill haley"
+"title": "Bach Concerto In F Moll", "composer": "unknown"
+"title": "Água De Beber", "composer": "tom jobim"
+"title": "Oh Solitude", "composer": "henry purcell"
+"title": "Flourish For Wind Band", "composer": "ralph vaughan williams"
+"title": "Water Music Door G.F", "composer": "unknown"
+"title": "Violin Partita No", "composer": "johann sebastian bach"
+"title": "I Will Always Think Of You", "composer": "unknown"
+"title": "Howl'S Moving Castle", "composer": "composed by joe hisaishi"
+"title": "Clarinet Concerto In A Major", "composer": "unknown"
+"title": "Era De Maggio", "composer": "p m costa"
+"title": "Ultimate Price", "composer": "unknown"
+"title": "Βαλς Των Χαμένων Ονείρων", "composer": ""
+"title": "Sos", "composer": "arr andrew king"

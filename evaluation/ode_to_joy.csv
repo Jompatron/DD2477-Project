@@ -1,0 +1,33 @@
+method,title,composer,score,relevance
+combination,String In The Real Waym, rebecca suger, 9.99,1
+combination,Nunca Es Suficiente, los angeles azulesm 1.86,1.86,0
+combination,Ode To Joy Cacofony,tommy thomson, 1.84,1
+combination,Bang!,arr isaac gordon,1.74,0
+combination,Anni's Song,john denver,1.65,0
+combination,Howl'S Moving Castle,joe hisaishi,1.64,1
+combination,Merry Go Round Of Life,joe hisaishi,1.59,1
+combination,Veronika Der Lenz Ist Da,walter jurmann comedian harmonists,1.48,0
+combination,Sos,arr andrew king,1.47,1
+combination,Best Friends,rex orange county arr alfredo gonzalz villa, 1.47,0
+melody,Nunca Es Suficiente, los angeles azulesm 1.86,1.23,0
+melody,Ode To Joy Cacofony,tommy thomson,1.21,1
+melody,Bang!,arr isaac gordon,1.15,0
+melody,Anni's Song,john denver,1.09,0
+melody,Howl'S Moving Castle,joe hisaishi,1.08,1
+melody,Merry Go Round Of Life,joe hisaishi,1.03,1
+melody,Veronika Der Lenz Ist Da,walter jurmann comedian harmonists,0.97,0
+melody,Sos,arr andrew king,0.97,1
+melody,Best Friends,rex orange county arr alfredo gonzalz villa,0.97,0
+melody,Flourish For Wind Band,ralph vaughan williams,0.97,0
+rhythm,Jorpo,moiss molerio,0.02,0
+rhythm,Harmony Club Waltz,scott joplin,0.02,0
+rhythm,Το Βαλς Των Χαμένων Ονείρων,unknown,0.02,0
+rhythm,Violin Partita No, johann sebastian bach,0.02,0
+rhythm,Title,composer,0.02,1
+rhythm,Turkish March,wolfgang amadeus mozart,0.02,0
+rhythm,Anxiété,pomme,0.02,0
+rhythm,Symphany No 5 In C Minor 1St Mvmt,beethoven,0.02,1
+rhythm,Focus,chipzel,0.02,0
+rhythm,The Armstrongs - First Man,justin hurwitz,0.02,0
+
+

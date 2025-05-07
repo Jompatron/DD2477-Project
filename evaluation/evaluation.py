@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # 1) Load CSV
-df = pd.read_csv('evaluation/combination.csv')
+df = pd.read_csv('evaluation/fuzzy_results.csv')
 
 # 2) Ensure correct types
 df['slop']      = df['slop'].astype(int)

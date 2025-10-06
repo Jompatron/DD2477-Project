@@ -1,5 +1,6 @@
 # DD2477-Project
 
+This project presents a musical search engine that allows users to search for musical pieces, melodies and rhythms in a subset of the newly released PDMX dataset, which contains symbolic music data and metadata. Elasticsearch is utilized for indexing and querying of the data. Four different search methods were implemented, phrase search, melody search, rhythm search and a combined search that uses all the aforementioned variants. The musical scores were first preprocessed by converting MusicXML-files into three different token fields used for indexing with Elasticsearch, enabling the different search functions. We earned an A on this project. 
 
 1. Clone the repository
    
